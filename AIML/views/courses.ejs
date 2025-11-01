@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Offered | Sree Chaitanya Institute of Technological Sciences</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            border-bottom: 2px solid #ccc; /* Light black border */
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        header img {
+            height: 60px;
+            margin-right: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        header h1 .sree {
+            color: red; /* "Sree" in red */
+        }
+        header h1 .chaitanya {
+            color: #1e1e2f; /* "Chaitanya Institute of Technological Sciences" in dark blue */
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #2b2b44;
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            margin-bottom: 30px;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+            margin: 0 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #d32f2f;
+        }
+
+        /* Courses Section */
+        .courses {
+            padding: 50px 20px;
+            background-color: #e3e3e3;
+        }
+        .courses h2 {
+            text-align: center;
+            color: #1e1e2f;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .course-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns for courses */
+            gap: 30px;
+            text-align: center;
+        }
+        .course-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .course-item:hover {
+            transform: translateY(-10px);
+        }
+        .course-item h3 {
+            color: #d32f2f;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .course-item p {
+            color: #333;
+            font-size: 1em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e1e2f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="data:image/jpeg;base64,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" alt="College Logo">
+        <h1>
+            <span class="sree">Sree</span>
+            <span class="chaitanya">Chaitanya Institute of Technological Sciences</span>
+        </h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+        <a href="#courses">Courses Offered</a>
+        <a href="#student-login">Student Login</a>
+        <a href="#faculty-login">Faculty Login</a>
+    </nav>
+
+    <!-- Courses Section -->
+    <div class="courses">
+        <h2>Courses Offered</h2>
+        <div class="course-list">
+            <div class="course-item">
+                <h3>Artificial Intelligence & Machine Learning (AIML)</h3>
+                <p>Explore the exciting world of AI and ML with cutting-edge curriculum.</p>
+            </div>
+            <div class="course-item">
+                <h3>Computer Science Engineering (CSE)</h3>
+                <p>Learn the foundations and advanced topics in computer science.</p>
+            </div>
+            <div class="course-item">
+                <h3>Electronics & Communication Engineering (ECE)</h3>
+                <p>Understand the technology behind modern electronic systems.</p>
+            </div>
+            <div class="course-item">
+                <h3>Electrical & Electronics Engineering (EEE)</h3>
+                <p>Master electrical and electronics engineering concepts.</p>
+            </div>
+            <div class="course-item">
+                <h3>Computer Science & Systems Management (CSM)</h3>
+                <p>Bridge technology and management with this versatile course.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Sree Chaitanya Institute of Technological Sciences. All rights reserved.</p>
+    </footer>
+</body>
+</html>

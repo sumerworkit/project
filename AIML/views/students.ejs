@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-name {
+            margin-right: 20px;
+            font-size: 16px;
+        }
+        
+        .logout-btn {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-top: 30px;
+        }
+        
+        .dashboard-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3f51b5;
+        }
+        
+        /* Student Details Styles */
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .detail-item {
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Attendance Section */
+        .attendance-overview {
+            margin-top: 30px;
+        }
+        
+        .attendance-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .overall-attendance {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .percentage {
+            font-size: 36px;
+            font-weight: bold;
+            color: #3f51b5;
+        }
+        
+        .attendance-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .subjects-table th,
+        .subjects-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .subjects-table th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .attendance-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .attendance-progress {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .good {
+            background-color: #4caf50;
+        }
+        
+        .average {
+            background-color: #ff9800;
+        }
+        
+        .poor {
+            background-color: #f44336;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .student-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .subjects-table th:nth-child(3),
+            .subjects-table td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        .message-icon {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #4a6cf7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 99;
+}
+
+.message-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Details Screen Styling */
+.details-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.details-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.details-header {
+  padding: 15px 20px;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.details-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.close-btn {
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #555;
+}
+
+.details-content {
+  padding: 20px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #444;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 14px;
+}
+
+.input-group textarea {
+  min-height: 80px;
+  resize: none;
+}
+
+        .message {
+        margin-left : 25%;
+        border : 1px solid transparent;
+        height : 35%;
+        width : 55%;
+        border-radius : 10px;
+        }
+        #message {
+         border : 1px solid transparent;
+        height : 100%;
+        width : 100%;
+        background-color : blue;
+          border-radius : 10px;
+           margin-bottom : 5%;
+           color : azure;
+        }
+        #ask-doubt-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#ask-doubt-btn:hover {
+  background-color: #45a049;
+}
+
+/* Modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 70%;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+input  {
+    border : 1px solid black;
+    background-color : transparent;
+    height : 35%;
+    width : 75%;
+    border-radius : 1px;
+    outline : none;
+    font-size : 20px;
+    color : black;
+  }
+
+  .toggle-button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    
+    .toggle-button:hover {
+      background-color: #2b6bc3;
+    }
+    
+    .form-container {
+      display: none;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    
+    .submit-button {
+      background-color: #34a853;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .submit-button:hover {
+      background-color: #2a8645;
+    }
+
+    .doubt-table-container {
+    margin-top: 30px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width :78.5%;
+    margin-left : 10.5%;
+}
+
+/* Table styling */
+.doubt-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+/* Table header styling */
+.doubt-table th {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Table cell styling */
+.doubt-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* Row hover effect */
+.doubt-table tbody tr:hover {
+    background-color: #f5f7fa;
+}
+.doubt-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Student Portal</div>
+            <div class="user-actions">
+                <span class="user-name">Welcome, <%=data.student_name%></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container main-content">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">Student Information</h2>
+                <span class="semester" id="time"></span>
+            </div>
+            
+            <div class="student-details">
+                <div class="detail-item">
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value"><%=data.student_name%></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Roll Number</div>
+                    <div class="detail-value"><%=data.roll_number%></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Branch</div>
+                    <div class="detail-value"><%=data.branch%></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Year</div>
+                    <div class="detail-value"><%=data.year%> year</div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Section</div>
+                    <div class="detail-value"><%=data.section%></div>
+                </div>
+            </div>
+        </div>
+            <button id="ask-doubt-btn">Ask Doubt</button>
+
+<!-- The modal/popup form -->
+<div id="doubt-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Ask Your Doubt</h3>
+      <div class="form-group">
+      <form id="doubt-form" action="/doubt-student" method="POST">
+      <label for="faculty_name">Faculty Name</label>
+        <input id="faculty_name" name="faculty_name"  required></input>
+        <label for="subject">subject</label>
+        <input id="subject" name="subject"  required></input>
+        <label for="roll_number">Roll Number</label>
+        <input id="roll_number" name="roll_number" value='<%= data.roll_number %>'  readOnly></input>
+        <label for="doubt">Your Doubt</label>
+        <textarea id="doubt" name="doubt" placeholder="Type your doubt here..." required></textarea>
+         <button type="submit" class="submit-btn">Submit</button>
+    </form>
+      </div>
+     
+  </div>
+</div>
+
+<div class="message-icon" id="message-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</div>
+
+<!-- Details Screen -->
+<div class="details-screen" id="details-screen">
+  <div class="details-container">
+    <div class="details-header">
+      <h3>Doubt Details</h3>
+      <button onClick="reset()"> * </button>
+    </div>
+    <div class="details-content">
+     <div class="doubt-table-container">
+    <table class="doubt-table">
+        <h2 align="center">  Doubt Section </h2>
+        <thead>
+            <tr>
+                <th>Faculty Name</th>
+                <th>Roll Number</th>
+                <th>Subject</th>
+                <th>Doubt</th>
+                <th>Clarify</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(doubt) {%>
+                <% doubt.forEach(doubt => { %>
+                <% if((doubt.clarified)) {%>
+                <tr>
+                    <td><%= doubt.faculty_name %></td>
+                    <td><%= doubt.roll_number %></td>
+                    <td><%= doubt.subject %></td>
+                    <td><%= doubt.doubt %></td>
+                    <td><%= doubt.clarification %></td>
+                </tr>
+                <% } %>
+                <% }) %>
+                <% } else {  %>
+            <tr>
+                <td>Dr. Johnson</td>   
+                <td>CSM2001</td>
+                <td>Data Structures</td>
+                <td>How to implement AVL tree rotations?</td>
+                <td><button class="clarify-btn" onclick="clarifyDoubt(1)">Clarify</button></td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+      
+      
+    </div>
+  </div>
+</div>
+
+        
+        <div class="dashboard-card attendance-overview">
+            <div class="card-header">
+                <h2 class="card-title">Attendance Overview</h2>
+            </div>
+            
+            <div class="attendance-header">
+                <div class="overall-attendance">
+                    <div class="percentage"><%=((data.attended_classes)/(data.total_classes ))  * 100  %> %</div>
+                    <div class="attendance-label">Overall Attendance</div>
+                </div>
+                <div class="overall-attendance">
+                    <div class="percentage"><%=data.attended_classes %>/<%=data.total_classes  %></div>
+                    <div class="attendance-label">Classes Attended</div>
+                </div>
+            </div>
+            
+            <table class="subjects-table">
+                <thead>
+                    <tr>
+                        <th>Subjects</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                   <% data.subjects.forEach(data => { %>
+                    <tr>
+                        <td><%=data%></td>
+                        </tr>
+                        <% })%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    
+    <script>
+        function logout() {
+            alert("Logging out... You will be redirected to the login page.");
+            // In a real application, this would handle the logout process and redirect
+             window.location.href = "/studentLogin";
+        }
+
+        const modal = document.getElementById("doubt-modal");
+
+// Get the button that opens the modal
+const btn = document.getElementById("ask-doubt-btn");
+
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+
+const messageIcon = document.getElementById('message-icon');
+const detailsScreen = document.getElementById('details-screen');
+const closeDetails = document.getElementById('close-details');
+
+// Show details screen when message icon is clicked
+messageIcon.addEventListener('click', function() {
+  detailsScreen.style.display = 'block';
+  document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+});
+
+// Hide details screen when close button is clicked
+closeDetails.addEventListener('click', function() {
+  detailsScreen.style.display = 'none';
+  document.body.style.overflow = 'auto'; // Restore scrolling
+});
+
+// Hide details screen when clicking outside the details container
+detailsScreen.addEventListener('click', function(event) {
+  if (event.target === detailsScreen) {
+    detailsScreen.style.display = 'none';
+    // Restore scrolling
+  }
+});
+
+
+document.getElementById('doubt-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const faculty_name = document.getElementById('faculty_name').value;
+  const subject = document.getElementById('subject').value;
+  const doubt = document.getElementById('doubt').value;
+  const roll_number = '<%= data.roll_number %>'; // if rendered via EJS
+
+  const modal = document.getElementById('doubt-modal');
+
+  fetch('/doubt-student', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ faculty_name, subject, doubt, roll_number })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success === true) {
+      alert('Doubt submitted successfully!');
+      modal.style.display = 'none';
+    } else {
+      alert('Something went wrong! Please try again.');
+    }
+  })
+  .catch(err => console.log(err));
+});
+
+function reset() {
+ const element = document.getElementById('details-screen');
+
+ element.style.display = 'none';
+ window.location.reload();
+  }
+    </script>
+</body>
+</html>

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard - CSM Department</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #3a4c8c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            margin-right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #3a4c8c;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .header-text h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #2d3b6e;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .user-name {
+            font-size: 14px;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: white;
+            color: #3a4c8c;
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+            width:99%;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #3a4c8c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Faculty Addition Form Styles */
+        .faculty-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #3a4c8c;
+            outline: none;
+        }
+        
+        .submit-btn {
+            background-color: #3a4c8c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2d3b6e;
+        }
+        
+        .refresh-btn {
+            background-color: #3a4c8c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        /* Attendance Table Styles */
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f5f7fa;
+            border-radius: 5px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background-color: transparent;
+            border: none;
+            padding: 5px;
+            flex-grow: 1;
+            font-size: 14px;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+        }
+        
+        .download-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #3d8b40;
+        }
+        
+        .download-icon {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+        
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            word-break: break-word;
+            float : none;
+            page-break-after: always;
+        }
+        
+        .attendance-table th,
+        .attendance-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .attendance-table th {
+            background-color: #f5f7fa;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .attendance-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .attendance-table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .present {
+            background-color: #e6f7e6;
+            color: #3d8b40;
+        }
+        
+        .absent {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .pagination button {
+            background-color: #f5f7fa;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination button.active {
+            background-color: #3a4c8c;
+            color: white;
+        }
+        
+        .pagination button:hover:not(.active) {
+            background-color: #e8eaed;
+        }
+        
+        /* Year section styles */
+        .year-section {
+            margin-bottom: 30px;
+        }
+        
+        .year-title {
+            font-size: 18px;
+            color: #3a4c8c;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .branches-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            float : none;
+            page-break-after: always;
+        }
+        /* Add to your stylesheet */
+#boss {
+  overflow: visible !important;
+  white-space: nowrap; /* Prevent table wrapping */
+}
+
+#boss table {
+  display: inline-table !important;
+  float: none !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid-page !important;
+}
+
+@media print {
+  body, html, #boss {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+        
+        .branch-card {
+            flex: 1;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            float : none;
+            page-break-after: always;
+        }
+        
+        .branch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .branch-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3a4c8c;
+        }
+        
+        .no-data-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        #boss {
+  width: auto;
+  max-width: none;
+  overflow-x: visible;
+}
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-left {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+            
+            .faculty-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .branches-container {
+                flex-direction: column;
+            }
+        }
+         .erase-button {
+    background-color: #1e40af; /* Deep blue color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left:42%;
+    margin-bottom : 5%;
+  }
+  
+  .erase-button:hover {
+    background-color: #1e3a8a; /* Darker blue on hover */
+  }
+  
+  .erase-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.3);
+  }
+  
+  .erase-button svg {
+    margin-right: 8px;
+  }
+
+
+  .btn-delete {
+    background-color : transparent;
+    height : 98%;
+    width : 98%;
+    border : 1px solid blue;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div class="logo">CSM</div>
+                <div class="header-text">
+                    <h1>Welcome HOD, CSM Department</h1>
+                    <p>Department of Computer Science and Machine Learning</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <button class="logout-btn">Logout</button>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">Add Faculty Member</h2>
+            <form class="faculty-form">
+                <div>
+                    <div class="form-group">
+                        <label for="faculty-name">Full Name</label>
+                        <input type="text" id="faculty-name" name="faculty_name" required placeholder="Enter faculty name">
+                    </div>
+                    <div class="form-group">
+                        <label for="faculty-password">Password</label>
+                        <input type="password" id="faculty-password" name="faculty_password" required placeholder="Create password">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="faculty-id">User ID</label>
+                        <input type="text" id="faculty-id" name="faculty_id" required placeholder="Create user ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="faculty-email">Email Address</label>
+                        <input type="email" id="faculty-email" name="faculty_email" required placeholder="Enter email address">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="submit-btn">Add Faculty</button>
+                </div>
+            </form>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">Department Attendance Data</h2>
+            <div class="table-actions">
+                <button class="download-btn" onClick="downloadPDF()">
+                    <span class="download-icon">↓</span> Download PDF
+                </button>
+            </div>
+            <section id="boss">
+            <!-- First Year Section -->
+            <div class="year-section">
+                <h3 class="year-title">First Year</h3>
+                <div class="branches-container">
+                    <!-- First Year CSM -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">CSM Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-1">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(fcsm) { %>
+                                <% fcsm.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- First Year AIML -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">AIML Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-2">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(faiml) { %>
+                                <% faiml.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Second Year Section -->
+            <div class="year-section">
+                <h3 class="year-title">Second Year</h3>
+                <div class="branches-container">
+                    <!-- Second Year CSM -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">CSM Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-3">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(scsm) { %>
+                                <% scsm.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Second Year AIML -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">AIML Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-4">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(saiml) { %>
+                                <% saiml.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Third Year Section -->
+            <div class="year-section">
+                <h3 class="year-title">Third Year</h3>
+                <div class="branches-container">
+                    <!-- Third Year CSM -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">CSM Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-5">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(tcsm) { %>
+                                <% tcsm.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Third Year AIML -->
+                    <div class="branch-card">
+                        <div class="branch-header">
+                            <h4 class="branch-title">AIML Branch</h4>
+                        </div>
+                        <table class="attendance-table" id="t-6">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance</th>
+                                    <th>Attendance %</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(taiml) { %>
+                                <% taiml.forEach(student => { %>
+                                <tr>
+                                    <td><%=student.student_name%></td>
+                                    <td><%=student.roll_number%></td>
+                                    <td><%=student.total_classes%></td>
+                                    <td><%=student.attended_classes%></td>
+                                    <td><%=((student.attended_classes)/(student.total_classes)) * 100%>%</td>
+                                    <td><button class="btn-delete" onclick='deleteStudent("<%=student.roll_number%>")'>Delete</button></td>
+                                </tr>
+                                <% }) } else { %>
+                                <tr>
+                                    <td colspan="5" class="no-data-message">No data found</td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        </section>
+        <button id="eraseButton" class="erase-button" onClick="erase()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 6h18"></path>
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line>
+    <line x1="14" y1="11" x2="14" y2="17"></line>
+  </svg>
+  Erase Collections From Database
+</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        document.querySelector('.logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = '/HOD-LOGIN';
+        });
+
+        document.querySelector('.faculty-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const faculty_name = document.getElementById('faculty-name').value;
+            const faculty_id = document.getElementById('faculty-id').value;
+            const faculty_password = document.getElementById('faculty-password').value;
+            const faculty_email = document.getElementById('faculty-email').value;
+
+            fetch('/csm-hod-home', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({faculty_name, faculty_id, faculty_password, faculty_email})
+            }).then(response => response.json()).then(data => {
+                if(data.success === true) {
+                    alert('Faculty added Successfully!');
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Faculty already present in Data Base!')
+                    window.location.href = data.redirect;
+                }
+            }).catch(err => console.log(err))
+        });
+
+
+      async function downloadPDF() {
+  const element = document.getElementById('boss');
+  
+  // Save original styles to restore later
+  const originalStyles = {
+    overflow: element.style.overflow,
+    display: element.style.display,
+    width: element.style.width,
+    position: element.style.position
+  };
+  
+  // Critical pre-processing to ensure full content capture
+  element.style.overflow = 'visible';
+  element.style.display = 'block';
+  element.style.width = 'auto'; // Use 'auto' instead of 'fit-content' for better support
+  element.style.position = 'relative'; // Ensure proper positioning
+  
+  // Add padding to ensure content doesn't get cut off
+  const paddingBuffer = 20; // pixels
+  
+  // Force layout recalculation
+  void element.offsetWidth;
+  
+  // Calculate exact dimensions with buffer
+  const width = element.scrollWidth + (paddingBuffer * 2);
+  const height = element.scrollHeight + (paddingBuffer * 2);
+  
+  const opt = {
+    margin:1, // Add margin to prevent cutoff
+    filename: 'attendance-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 }, // Slightly reduced for better performance
+    html2canvas: {
+      scale: 2, // Higher scale for better quality
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      x: -paddingBuffer, // Shift left to capture content that might be cut off
+      windowWidth: width + 50, // Add extra buffer
+      windowHeight: height + 50,
+      allowTaint: true,
+      letterRendering: true,
+      logging: false, // Disable logging for better performance
+      ignoreElements: (element) => element.tagName === 'SCRIPT',
+      onclone: (clonedDoc) => {
+        const clonedElement = clonedDoc.getElementById('boss');
+        clonedElement.style.overflow = 'visible';
+        clonedElement.style.display = 'block';
+        clonedElement.style.width = 'auto';
+        clonedElement.style.position = 'relative';
+        
+        // Force all table cells to be visible
+        const tables = clonedElement.querySelectorAll('table');
+        tables.forEach(table => {
+          table.style.width = 'auto';
+          table.style.tableLayout = 'auto';
+          table.style.display = 'table';
+          
+          // Ensure all table cells are visible
+          const cells = table.querySelectorAll('th, td');
+          cells.forEach(cell => {
+            cell.style.whiteSpace = 'normal';
+            cell.style.overflow = 'visible';
+          });
+        });
+      }
+    },
+    jsPDF: {
+      unit: 'px',
+      format: [width, height],
+      orientation: width > height ? 'landscape' : 'portrait',
+      compress: true // Compress the PDF for better performance
+    }
+  };
+  
+  try {
+    // Add delay to ensure proper rendering
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Increased delay
+    
+    // Generate PDF
+    await html2pdf()
+      .from(element)
+      .set(opt)
+      .save();
+  } catch (error) {
+    console.error('PDF generation failed:', error);
+  } finally {
+    // Restore original styles
+    element.style.overflow = originalStyles.overflow;
+    element.style.display = originalStyles.display;
+    element.style.width = originalStyles.width;
+    element.style.position = originalStyles.position;
+  }
+}
+
+function erase() {
+    let val = prompt('All the data will erased from data base . Type yes to confirm !');
+    
+    if(val=='yes') {
+    fetch('/erase-data',{
+        method: 'post',
+        headers:{
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({})
+    }).then(response => response.json()).then(data=> {
+        if(data.success == true){
+            alert('All the collections from the databsae is removed');
+            window.location.reload();
+             console.log('pass');
+        }else{
+            alert('something went wrong ! try again later')
+        }
+    }).catch(err=> console.log(err));
+   
+}else{
+console.log('fail');
+    window.location.href = '/csm-hod-home';
+    
+}
+}
+
+
+async function deleteStudent(rn) {
+
+    const roll_number = rn;
+    console.log(roll_number);
+
+    fetch('/delete-student', {
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({roll_number})
+    }).then(res=> res.json()).then(data => {
+        if(data.success == true) {
+            alert(` student ${roll_number} has been erased from data base`);
+            window.location.reload();
+        }else{
+            alert('something went wrong , try again later')
+        }
+    }).catch(err=> console.log(err));
+
+
+}
+
+    </script>
+</body>
+</html>

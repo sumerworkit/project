@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f6fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 450px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-weight: 600;
+      font-size: 26px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #34495e;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #dce3f0;
+      border-radius: 10px;
+      background: #f9fbff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      background-color: #4a90e2;
+      color: white;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-top: 5px;
+    }
+
+    button:hover {
+      background-color: #3b7dc4;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #4a90e2;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .toggle-link:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    input[type="text"]::placeholder {
+      color: #a9b8cc;
+      font-style: italic;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Login Form -->
+  <div id="loginForm">
+    <h2>Login</h2>
+    <div class="form-group">
+        <form id="form1" action="/studentLogin" method="POST">
+      <label for="loginRoll">Roll Number</label>
+      <input type="text" id="roll_number" name="roll_number" placeholder="Enter your roll number" required>
+    </div>
+    <button type="submit">Login</button>
+    <div class="toggle-link" onclick="showRegister()">Don't have an account? Register</div>
+        </form>
+  </div>
+
+  <!-- Register Form -->
+  <div id="registerForm" class="hidden">
+    <h2>Register</h2>
+    <div class="form-group">
+        <form id="form2" >
+      <label for="name">Name</label>
+      <input type="text" id="student_name" name="student_name" placeholder="Your full name" required>
+    </div>
+    <div class="form-group">
+      <label for="roll">Roll Number</label>
+      <input type="text" id="rollnumber" name="roll_number" placeholder="Your roll number" required>
+    </div>
+    <div class="form-group">
+      <label for="branch">Branch</label>
+      <input type="text" id="branch" name="branch" placeholder="CSE, ECE, etc." required>
+    </div>
+    <div class="form-group">
+      <label for="year">Year</label>
+      <select id="year" name="year">
+        <option disabled selected>Select Year</option>
+        <option value="1">1st Year</option>
+        <option value="2">2nd Year</option>
+        <option value="3">3rd Year</option>
+        <option value="4">4th Year</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="section">Section</label>
+      <input type="text" id="section" name="section" placeholder="Section A, B, etc.">
+    </div>
+
+    <div class="form-group">
+      <label>Subjects</label>
+      <input type="text" id="subject1" name="subject1" placeholder="Subject 1" required>
+      <input type="text" id="subject2" name="subject2" placeholder="Subject 2" required>
+      <input type="text" id="subject3" name="subject2" placeholder="Subject 3" required>
+      <input type="text" id="subject4" name="subject4" placeholder="Subject 4" required>
+      <input type="text" id="subject5" name="subject5" placeholder="Subject 5" required>
+      
+    </div>
+
+    <button type="submit">Register</button>
+    <div class="toggle-link" onclick="showLogin()">Already have an account? Login</div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function showRegister() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.remove('hidden');
+  }
+
+  function showLogin() {
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+  }
+
+  
+
+  document.getElementById('form2').addEventListener('submit',function(e) {
+
+    e.preventDefault();
+
+   const student_name = document.getElementById('student_name').value;
+   const roll_number = document.getElementById('rollnumber').value;
+   const branch = document.getElementById('branch').value;
+    const year = document.getElementById('year').value;
+   const section =  document.getElementById('section').value;
+   const subject1 = document.getElementById('subject1').value;
+   const subject2 = document.getElementById('subject2').value;
+   const subject3 = document.getElementById('subject3').value;
+   const subject4 = document.getElementById('subject4').value;
+   const subject5 = document.getElementById('subject5').value;
+
+   console.log(student_name,roll_number,branch,year,section,subject1,subject2,subject3,subject4,subject5);
+
+   fetch('/add-student',{
+    method : 'POST',
+    headers : {
+      'Content-Type' : 'application/json'
+    },
+    body : JSON.stringify({student_name,roll_number,branch,year,section,subject1,subject2,subject3,subject4,subject5})
+
+   }).then(response => response.json()).then(data => {
+      if(data.success == true) {
+        alert('Registration Successfull !');
+        window.location.href = data.redirect;
+      }else {
+        alert('LOGIN Credentials taken !');
+        window.location.href = data.redirect;
+      }
+   }).catch(err=> console.log(err))
+
+
+  })
+
+
+ 
+</script>
+
+</body>
+</html>
